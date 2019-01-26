@@ -11,7 +11,7 @@ import * as serviceWorker from './serviceWorker';
 
 import combinedReducer from './Store';
 import initialState from './initalState'
-import {time} from './Store/WorkClock/saga';
+import time from './Store/WorkClock/saga';
 const sagaMiddleware = createSagaMiddleware()
 
 const store = createStore(combinedReducer, applyMiddleware(sagaMiddleware));

@@ -4,11 +4,11 @@ interface Function{
 }
 
 export interface MainProps {
-    in: Function,
+    inn: Function,
     out: Function,
     start:  string,
     end: string,
-    clock: number,
+    clock: string,
     started: boolean,
     stopped: boolean,
 }

@@ -5,19 +5,20 @@ import {logIn, logOut} from '../Store/WorkClock/actions';
 
 import {State} from '../interfaces';
 import { WorkClockReducer } from '../Store/WorkClock/interfaces';
+import { func } from 'prop-types';
 
 const mapStateToProps = (state: State) => {
     return {
         start: state.workClock.start,
         end: state.workClock.end,
-        clock: state.workClock.clock,
+        clock: formatTimer(state.workClock.clock),
         ...isStopped(state.workClock) 
     }
 }
 
 const mapDispatchToProps = (dispatch:Dispatch) => {
     return {
-        in: () => {
+        inn: () => {
             dispatch(logIn())
         },
         out: () =>{ 
@@ -27,8 +28,25 @@ const mapDispatchToProps = (dispatch:Dispatch) => {
 }
 
 function isStopped({start, end}:WorkClockReducer){
+    console.log(start, end);
     if(end.length > 0 && end >= start) return {stopped: true, started: true};
     else if(start.length > 0) return {stopped: false, started:  true}
     else return {stopped: false, started: false};
 }
+
+function formatTimer(num:number){
+    const sec = num % 60;
+    const min = (num / 60) % 60;
+    const hour = (num / 60 / 60) % 24;
+    return [hour,min,sec].map(val => {
+        const floored = Math.floor(val);
+        return addZero(floored);
+    }).join(":"); 
+}
+
+function addZero(num:number){
+    if(num < 10) return "0"+num;
+    else return num;
+}
+
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

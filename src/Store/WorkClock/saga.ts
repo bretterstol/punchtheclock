@@ -1,35 +1,33 @@
-import {put, takeEvery, call, apply} from 'redux-saga/effects';
+import {put, takeEvery, call, apply, select, cancelled, cancel, fork, take} from 'redux-saga/effects';
 import {WorkClockActionTypes} from './types';
 
-let number = 0;
 
-function* startTimer(){
-    yield apply(interval, interval.set, [() => {
-        number++
-    }, 1000]);
-    yield put({
-        type: WorkClockActionTypes.WORK_CLOCK,
-        payload: number
-    });
-}
+const delay = (ms:number) => new Promise(res => setTimeout(res, ms));
 
-
-function* stopTimer(){
-    const stopper = yield apply(interval, interval.clear);
-}
-
-const interval = {
-    id: 0,
-    set: function(f = (a:any) => a, delay:number){
-        if(this.id) this.clear();
-        this.id = window.setInterval(f, delay);
-    },
-    clear: function(){
-        window.clearInterval(this.id);
+function* startTimer() {
+    const { workClock } = yield select();
+    let number = workClock.clock;
+    try {
+        while (true) {
+            yield put({
+                type: WorkClockActionTypes.WORK_CLOCK,
+                payload: number
+            });
+            yield delay(1000);
+            number++;
+        }
+    } finally {
+        yield cancelled()
     }
 }
 
-export function* time(){
-    yield takeEvery(WorkClockActionTypes.WORK_START, startTimer);
-    yield takeEvery(WorkClockActionTypes.WORK_END, stopTimer);
-} 
+function* time(){
+    while(yield take(WorkClockActionTypes.WORK_START)){
+        const timer = yield fork(startTimer);
+        if(yield take(WorkClockActionTypes.WORK_END)){
+            yield cancel(timer)
+        }
+    }
+}
+
+export default time;
