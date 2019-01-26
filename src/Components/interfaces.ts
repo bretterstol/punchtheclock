@@ -9,6 +9,8 @@ export interface MainProps {
     start:  string,
     end: string,
     clock: string,
-    started: boolean,
-    stopped: boolean,
+}
+
+export interface MainState{
+    running: boolean
 }

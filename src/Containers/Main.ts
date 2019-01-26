@@ -12,7 +12,6 @@ const mapStateToProps = (state: State) => {
         start: state.workClock.start,
         end: state.workClock.end,
         clock: formatTimer(state.workClock.clock),
-        ...isStopped(state.workClock) 
     }
 }
 
@@ -25,13 +24,6 @@ const mapDispatchToProps = (dispatch:Dispatch) => {
             dispatch(logOut())
         },
     }
-}
-
-function isStopped({start, end}:WorkClockReducer){
-    console.log(start, end);
-    if(end.length > 0 && end >= start) return {stopped: true, started: true};
-    else if(start.length > 0) return {stopped: false, started:  true}
-    else return {stopped: false, started: false};
 }
 
 function formatTimer(num:number){
