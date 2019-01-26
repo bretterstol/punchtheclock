@@ -9,8 +9,8 @@ class Main extends Component<MainProps, MainState>{
         this.state = {
             running: false
         }
-        this.handleClick = this.handleClick.bind(this);
-        this.callRedux = this.callRedux.bind(this);
+        this.startClick = this.startClick.bind(this);
+        this.endClick = this.endClick.bind(this);
     }
     render() {
         const { start, end, clock } = this.props;
@@ -18,18 +18,20 @@ class Main extends Component<MainProps, MainState>{
         return (
             <div className="centered">
                 <h1>{clock}</h1>
-                <button className={"button" + ((start && running) ? " in" : "")} onClick={this.handleClick}> Start</button>
-                <button className={"button" + ((end && !running) ? " out" : "")} onClick={this.handleClick}> End</button>
+                <button className={"button" + ((start && running) ? " in" : "")} onClick={this.startClick}> Start</button>
+                <button className={"button" + ((end && !running) ? " out" : "")} onClick={this.endClick}> End</button>
             </div>
         )
     }
-    handleClick(){
-        this.setState((prev) => ({running: !prev.running}),this.callRedux)
+    startClick(){
+        const {inn} = this.props;
+        this.setState({running: true});
+        inn()
     }
-    callRedux(){
-        const {inn, out} = this.props;
-        const {running} = this.state;
-        running ? inn() : out();
+    endClick(){
+        const {out} = this.props;
+        this.setState({running: false});
+        out()
     }
 
 }

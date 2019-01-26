@@ -5,12 +5,10 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga'
 
-import App from './Components/App';
 import Main from './Containers/Main';
 import * as serviceWorker from './serviceWorker';
 
 import combinedReducer from './Store';
-import initialState from './initalState'
 import time from './Store/WorkClock/saga';
 const sagaMiddleware = createSagaMiddleware()
 
